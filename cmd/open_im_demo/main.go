@@ -23,7 +23,7 @@ func main() {
 		authRouterGroup.POST("/login", register.Login)
 		authRouterGroup.POST("/reset_password", register.ResetPassword)
 		authRouterGroup.GET("/test", func(ctx *gin.Context) {
-			ctx.String(200, "Success")
+			ctx.String(200, "Success") //1333
 		})
 	}
 	log.NewPrivateLog("demo")
