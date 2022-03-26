@@ -22,6 +22,9 @@ func main() {
 		authRouterGroup.POST("/password", register.SetPassword)
 		authRouterGroup.POST("/login", register.Login)
 		authRouterGroup.POST("/reset_password", register.ResetPassword)
+		authRouterGroup.GET("/test", func(ctx *gin.Context) {
+			ctx.String(200, "Success") //1333
+		})
 	}
 	log.NewPrivateLog("demo")
 	ginPort := flag.Int("port", 42233, "get ginServerPort from cmd,default 42233 as port")
