@@ -64,6 +64,7 @@ const (
 	ConversationNotNotification = 1308
 	ConversationDefault         = 0
 	UserNotificationEnd         = 1399
+	OANotification              = 1400
 
 	GroupNotificationBegin = 1500
 
@@ -95,6 +96,8 @@ const (
 	//SessionType
 	SingleChatType = 1
 	GroupChatType  = 2
+
+	NotificationChatType = 4
 	//token
 	NormalToken  = 0
 	InValidToken = 1
@@ -122,17 +125,20 @@ const (
 	ReceiveNotNotifyMessage = 2
 
 	//OptionsKey
-	IsHistory            = "history"
-	IsPersistent         = "persistent"
-	IsOfflinePush        = "offlinePush"
-	IsUnreadCount        = "unreadCount"
-	IsConversationUpdate = "conversationUpdate"
-	IsSenderSync         = "senderSync"
+	IsHistory                  = "history"
+	IsPersistent               = "persistent"
+	IsOfflinePush              = "offlinePush"
+	IsUnreadCount              = "unreadCount"
+	IsConversationUpdate       = "conversationUpdate"
+	IsSenderSync               = "senderSync"
+	IsNotPrivate               = "notPrivate"
+	IsSenderConversationUpdate = "senderConversationUpdate"
 
 	//GroupStatus
 	GroupOk              = 0
 	GroupBanChat         = 1
 	GroupStatusDismissed = 2
+	GroupStatusMuted     = 3
 
 	GroupBaned          = 3
 	GroupBanPrivateChat = 4

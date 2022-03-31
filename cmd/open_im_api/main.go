@@ -7,6 +7,7 @@ import (
 	"Open_IM/internal/api/friend"
 	"Open_IM/internal/api/group"
 	"Open_IM/internal/api/manage"
+	"Open_IM/internal/api/office"
 	apiThird "Open_IM/internal/api/third"
 	"Open_IM/internal/api/user"
 	"Open_IM/pkg/common/log"
@@ -78,6 +79,7 @@ func main() {
 	thirdGroup := r.Group("/third")
 	{
 		thirdGroup.POST("/tencent_cloud_storage_credential", apiThird.TencentCloudStorageCredential)
+		thirdGroup.POST("/ali_oss_credential", apiThird.AliOSSCredential)
 		thirdGroup.POST("/minio_storage_credential", apiThird.MinioStorageCredential)
 		thirdGroup.POST("/minio_upload", apiThird.MinioUploadFile)
 	}
@@ -108,12 +110,19 @@ func main() {
 		conversationGroup.POST("/batch_set_conversation", conversation.BatchSetConversations)
 		conversationGroup.POST("/set_recv_msg_opt", conversation.SetRecvMsgOpt)
 	}
+	// office
+	officeGroup := r.Group("/office")
+	{
+		officeGroup.POST("/get_user_tags", office.GetUserTags)
+		officeGroup.POST("/create_tag", office.CreateTag)
+		officeGroup.POST("/delete_tag", office.DeleteTag)
+		officeGroup.POST("/set_tag", office.SetTag)
+		officeGroup.POST("/send_msg_to_tag", office.SendMsg2Tag)
+		officeGroup.POST("/get_send_tag_log", office.GetTagSendLogs)
+	}
 	apiThird.MinioInit()
 	log.NewPrivateLog("api")
 	ginPort := flag.Int("port", 10000, "get ginServerPort from cmd,default 10000 as port")
 	flag.Parse()
-	err := r.Run(":" + strconv.Itoa(*ginPort))
-	if err != nil {
-		log.NewError("", utils.GetSelfFuncName(), "start gin failed", err.Error())
-	}
+	r.Run(":" + strconv.Itoa(*ginPort))
 }
