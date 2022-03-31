@@ -7,11 +7,16 @@ import (
 	"Open_IM/pkg/common/db/mysql_model/im_mysql_model"
 	http2 "Open_IM/pkg/common/http"
 	"Open_IM/pkg/common/log"
+	"Open_IM/pkg/grpc-etcdv3/getcdv3"
+	rpc "Open_IM/pkg/proto/friend"
 	"Open_IM/pkg/utils"
+	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ParamsLogin struct {
@@ -46,6 +51,47 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"errCode": constant.PasswordErr, "errMsg": "password err"})
 		return
 	}
+	//登录成功 获取userid
+	userAccountid := r.Account
+	//---------添加默认好友开始--------------------------------------------
+	fmt.Println("-------------------------userid:" + userAccountid)
+	params1 := api.ImportFriendReq{}
+	params1.FriendUserIDList[0] = userAccountid
+	params1.FromUserID = "88888888" //默认好友id
+	params1.OperationID = params.OperationID
+	reqf := &rpc.ImportFriendReq{}
+	utils.CopyStructFields(reqf, &params1)
+	etcdConn := getcdv3.GetConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.OpenImFriendName)
+	client := rpc.NewFriendClient(etcdConn)
+
+	RpcResp, err := client.ImportFriend(context.Background(), reqf)
+	if err != nil {
+		log.NewError(reqf.OperationID, "ImportFriend failed ", err.Error(), reqf.String())
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": "ImportFriend failed "})
+		return
+	}
+	//--------------------------添加默认好友结束---------------------------------------------------
+
+	//-------------------添加默认群开始---------------------------
+
+	paramsInviteUser := api.InviteUserToGroupReq{}
+	paramsInviteUser.GroupID = "cef3553ebf11886f3b07bc42c683b044"
+	paramsInviteUser.InvitedUserIDList[0] = userAccountid
+	paramsInviteUser.OperationID = params.OperationID
+	paramsInviteUser.Reason = "没有原因"
+
+	reqToGroup := &rpc.InviteUserToGroupReq{}
+	utils.CopyStructFields(reqToGroup, &params)
+	log.NewInfo(reqToGroup.OperationID, "InviteUserToGroup args ", reqToGroup.String())
+
+	client = rpc.NewGroupClient(etcdConn)
+	RpcResp, err = client.InviteUserToGroup(context.Background(), reqToGroup)
+	if err != nil {
+		log.NewError(reqToGroup.OperationID, "InviteUserToGroup failed ", err.Error(), reqToGroup.String())
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": err.Error()})
+		return
+	}
+	//-------------------添加默认群结束---------------------------
 	url := fmt.Sprintf("http://%s:10000/auth/user_token", utils.ServerIP)
 	openIMGetUserToken := api.UserTokenReq{}
 	openIMGetUserToken.OperationID = params.OperationID
