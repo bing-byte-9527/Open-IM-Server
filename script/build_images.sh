@@ -7,10 +7,10 @@ rm Open-IM-Server -rf
 git clone https://github.com/bing-byte-9527/Open-IM-Server.git --recursive
 # 切换到 Open-IM-Server 代码库的 tuoyun 分支
 cd Open-IM-Server
-git checkout test
+git checkout main
 # 切换到 Open-IM-SDK-Core 子目录，该子目录包含了需要编译的代码
 cd cmd/Open-IM-SDK-Core/
-git checkout test
+git checkout main
 # 切换回 Open-IM-Server 代码库的根目录
 cd ../../
 # 构建 Docker 镜像，-t 选项用于指定镜像名称和版本号，-f 选项用于指定 Dockerfile 的位置
