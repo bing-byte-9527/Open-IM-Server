@@ -41,7 +41,7 @@ By deployment of the Open-IM-Server on the customer's server, developers can int
 2. Clone the Open-IM project to your server
 
    ```
-   git clone https://github.com/OpenIMSDK/Open-IM-Server.git --recursive
+   git clone https://github.com/bing-byte-9527/Open-IM-Server.git --recursive
    ```
 
 3. Deploy
@@ -78,7 +78,7 @@ By deployment of the Open-IM-Server on the customer's server, developers can int
 2. Clone
 
 ```shell
-git clone https://github.com/OpenIMSDK/Open-IM-Server.git --recursive 
+git clone https://github.com/bing-byte-9527/Open-IM-Server.git --recursive 
 cd cmd/Open-IM-SDK-Core
 git checkout main
 ```
